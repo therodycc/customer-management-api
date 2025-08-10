@@ -1,0 +1,84 @@
+version: '3.9'
+
+services:
+  postgresdb-app-server:
+    image: postgres:16
+    container_name: postgresdb-app-server
+    ports:
+      - ${DB_PORT}:5432
+    environment:
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - postgres-data:/data/db
+      - postgres-log:/var/log/postgresdb
+    networks:
+      consultanetwork:
+        ipv4_address: 172.20.0.2
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME} -d ${DB_NAME}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  api-server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: on-failure:5
+    container_name: api-server
+    ports:
+      - 3000:3000
+    environment:
+      API_TITLE: ${API_TITLE}
+      API_DESCRIPTION: ${API_DESCRIPTION}
+      API_VERSION: ${API_VERSION}
+      API_SERVER_URL: ${API_SERVER_URL}
+      PORT: ${PORT}
+      API_PREFIX: ${API_PREFIX}
+      FRONTEND_URL: ${FRONTEND_URL}
+
+      DB_TYPE: ${DB_TYPE}
+      DB_NAME: ${DB_NAME}
+      DB_PORT: 5432
+      DB_HOST: postgresdb-app-server
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      AUTO_LOAD_ENTITIES: ${AUTO_LOAD_ENTITIES}
+      SYNCHRONIZE: ${SYNCHRONIZE}
+
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRE_TIME: ${JWT_EXPIRE_TIME}
+
+      MINIO_ENDPOINT: ${MINIO_ENDPOINT}
+      MINIO_PORT: ${MINIO_PORT}
+      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
+      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
+
+      MAIL_CENTER_APP_KEY: ${MAIL_CENTER_APP_KEY}
+      MAIL_CENTER_SECRET_KEY: ${MAIL_CENTER_SECRET_KEY}
+      MAIL_CENTER_BASEURL: ${MAIL_CENTER_BASEURL}
+      MAIL_CENTER_ACTION_URL: ${MAIL_CENTER_ACTION_URL}
+
+      AUTH_COOKIES_NAME: ${AUTH_COOKIES_NAME}
+
+      CUSTOM_PASSWORD: ${CUSTOM_PASSWORD}
+    depends_on:
+      postgresdb-app-server:
+        condition: service_healthy
+    networks:
+      consultanetwork:
+        ipv4_address: 172.20.0.3
+
+volumes:
+  postgres-data:
+    driver: local
+  postgres-log:
+    driver: local
+
+networks:
+  consultanetwork:
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
