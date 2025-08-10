@@ -2,6 +2,14 @@
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
 </p>
 
+
+### Endpoints (Documentation)
+
+```bash
+/api/docs
+```
+![Alt text](image.png)
+
 ## Description
 
 Api de  desarrollado con el siguiente Stack:
@@ -11,53 +19,16 @@ Api de  desarrollado con el siguiente Stack:
 
 ```bash
 Node v18.14.2
-docker-compose.yml v3.9
 Postgres v16
 Nest v10.3.2
-```
-
-### Especificaciones Generales
-
-- Base URL: https://localhost:3000
-- Formato de Respuesta: JSON
-- Autenticación: Token (JWT) by cookies
-
-### Run MinIO local
-
-```bash
-  docker run -p 9000:9000 -p 9001:9001 \
-    --name minio \
-    -e "MINIO_ROOT_USER=my-root-user" \
-    -e "MINIO_ROOT_PASSWORD=my-root-password" \
-    -v /Users/macbookpro2017/minio/data:/data \
-    -v /Users/macbookpro2017/minio/config:/root/.minio \
-    quay.io/minio/minio server /data --console-address ":9001"
 ```
 
 ### Ejecutar en local
 
 ```bash
-git clone git@github.com:repository-name/customer-management-api.git
+yarn; yarn start:local
 ```
 
-```bash
-npm i
-```
-
-```bash
-yarn start:local
-```
-
-### Environments
-
-```bash
-```
-
-### Endpoints (Documentation)
-
-```bash
-/api/docs
-```
 
 Estructura del Módulo
 
@@ -72,4 +43,4 @@ src/
 │   ├── mapper/              # (Opcional) Transformadores entre entidades y DTOs
 │   └── [nombre-del-modulo].module.ts # Configuración del módulo
 ```
-# customer-management-api
+
