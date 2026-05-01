@@ -25,7 +25,7 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
 
   app.setGlobalPrefix(configService.get('API_PREFIX'));
-  app.use(cookieParser());
+  app.use(cookieParser);
 
   app.useGlobalPipes(
     new ValidationPipe({
